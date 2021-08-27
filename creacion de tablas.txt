@@ -1,0 +1,98 @@
+create database clinica
+
+create table tipopersonal(
+id_tipopersonal integer PRIMARY KEY,
+descripcion varchar(20));
+
+create table personal(
+idpersonal integer PRIMARY KEY,
+pernombre varchar(20) not null,
+perapellido varchar(40) not null,
+percelular integer,
+perdireccion varchar(40) not null,
+perci varchar(10) not null,
+correo varchar(20) not null,
+id_tipopersonal integer,
+
+ FOREIGN KEY (id_tipopersonal)REFERENCES tipopersonal(id_tipopersonal)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE);
+ 
+ 
+create table propietario(
+ci_propietario integer PRIMARY KEY,
+nombre varchar(20) not null,
+apellido varchar(30) not null,
+celular char(8) not null,
+correo varchar(30) not null,
+direccion varchar(40)
+	)
+create table tipoanimal(
+id_tipoanimal integer PRIMARY KEY,
+descripcion_tipoanimal varchar(20)
+) 	
+
+create table raza(
+id_raza integer,
+id_tipoanimal integer,
+descripcion_raza varchar(20),
+PRIMARY KEY(id_tipoanimal,id_raza),
+FOREIGN KEY (id_tipoanimal)REFERENCES tipoanimal(id_tipoanimal)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE);
+
+
+create table animal_mascota(
+id_animal integer PRIMARY KEy,
+annombre varchar(10) not null,
+color varchar(10),
+fecha varchar(11) not null,
+ci_propietario integer,
+id_raza integer,
+id_tipoanimal integer,
+FOREIGN KEY (ci_propietario)REFERENCES propietario(ci_propietario),
+FOREIGN KEY (id_raza,id_tipoanimal)REFERENCES raza(id_raza,id_tipoanimal)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE);
+
+create table historico_animal(
+nro_historial integer PRIMARY KEY,
+descripcion varchar(100),
+fecha varchar(11),
+id_animal integer,
+FOREIGN KEY (id_animal)REFERENCES animal_mascota(id_animal)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE);
+ 
+ create table atencion_general(
+nro_atencion integer PRIMARY KEY,
+fecha varchar(11) not null,
+total integer not null,
+idpersonal integer,
+ci_propietario integer,
+nro_historial integer,
+ 
+FOREIGN KEY (idpersonal)REFERENCES personal(idpersonal),
+FOREIGN KEY (ci_propietario)REFERENCES propietario(ci_propietario),
+FOREIGN KEY (nro_historial)REFERENCES historico_animal(nro_historial)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE);
+ 
+ create table servicio(
+cod_servicio integer PRIMARY KEY,
+precio integer not null,
+descripcion varchar(20) not null
+)
+
+create table detalle_servicio(
+  nro_atencion integer not null,
+  cod_servicio integer not null,	
+  preciounitario integer not null,
+	
+  PRIMARY KEY (nro_atencion,cod_servicio),
+  FOREIGN KEY (nro_atencion) references atencion_general(nro_atencion),
+  FOREIGN KEY (cod_servicio) references servicio(cod_servicio)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE );
+
+
